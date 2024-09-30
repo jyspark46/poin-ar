@@ -3,22 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web AR</title>
+    <title>Simple 3D Model</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://aframe.io/releases/1.2.0/aframe-ar.min.js"></script>
     <style>
       body {
         margin: 0;
         overflow: hidden;
       }
+      a-scene {
+        height: 100vh;
+      }
     </style>
   </head>
   <body>
-    <a-scene embedded arjs="sourceType: webcam;">
-      <a-marker preset="hiro">
-        <a-box color="blue" depth="1" height="1" width="1"></a-box>
-      </a-marker>
-      <a-entity camera></a-entity>
+    <a-scene embedded>
+      <a-box
+        position="0 1 -5"
+        rotation="0 45 0"
+        color="#4CC3D0"
+        depth="1"
+        height="1"
+        width="1"
+      ></a-box>
+      <a-sphere position="2 1 -5" radius="1" color="#EF2D5E"></a-sphere>
+      <a-cylinder
+        position="-2 0.75 -5"
+        radius="0.5"
+        height="1.5"
+        color="#FFC65D"
+      ></a-cylinder>
+      <a-plane
+        position="0 0 -4"
+        rotation="-90 0 0"
+        width="4"
+        height="4"
+        color="#7BC8A4"
+      ></a-plane>
+      <a-entity camera look-controls position="0 1.6 0"></a-entity>
     </a-scene>
   </body>
 </html>
