@@ -95,17 +95,14 @@
     	<script>
 		// preloader
 		(() => {
-			const initialBodyBackgroudStyle = (() => {
-					with (document.body.style)
-						return {
-							backgroundColor,
-							backgroundImage,
-							backgroundSize,
-							backgroundRepeat,
-							backgroundPosition
-						};
-				})()
-			;
+			const bodyStyle = document.body.style;
+            const initialBodyBackgroundStyle = {
+                backgroundColor: bodyStyle.backgroundColor,
+                backgroundImage: bodyStyle.backgroundImage,
+                backgroundSize: bodyStyle.backgroundSize,
+                backgroundRepeat: bodyStyle.backgroundRepeat,
+                backgroundPosition: bodyStyle.backgroundPosition
+            };
 
 
 			const default_bg = {
