@@ -34,6 +34,7 @@
       // React Native에서 메시지를 수신
       window.addEventListener("message", (event) => {
         const data = JSON.parse(event.data);
+        console.log("data: " + data);
         // 데이터 처리 및 마커 위에 표시
         detectedText.setAttribute(
           "text",
