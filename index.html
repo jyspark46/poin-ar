@@ -50,7 +50,7 @@
 <html>
   <head>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/3.3.2/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0; overflow: hidden">
     <a-scene embedded arjs="sourceType: webcam;">
@@ -78,8 +78,8 @@
       const detectedText = document.querySelector("#detectedText");
 
       marker.addEventListener("markerFound", () => {
-        detectedText.setAttribute("visible", "true");
         detectedText.setAttribute("text", "value", "detected");
+        detectedText.setAttribute("visible", "true");
       });
 
       marker.addEventListener("markerLost", () => {
