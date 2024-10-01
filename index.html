@@ -13,7 +13,6 @@
           rotation="0 45 0"
           color="#4CC3D0"
           id="myCube"
-          material="opacity: 0.2; transparent: true"
         ></a-box>
         <!-- 데이터 텍스트 -->
         <a-entity
@@ -28,26 +27,61 @@
     </a-scene>
 
     <script>
-      window.onload = function () {
-        // 마커가 인식되면 텍스트를 보이게 하고, 마커가 사라지면 다시 숨김 처리
-        const marker = document.querySelector("#markerHiro");
-        const detectedText = document.querySelector("#detectedText");
+      const marker = document.querySelector("#markerHiro");
+      const apiDataText = document.querySelector("#apiDataText");
+      const API_BASE_URL = "https://poinpoin.site/api/materials-action";
 
-        marker.addEventListener("markerFound", () => {
-          if (detectedText) {
-            detectedText.setAttribute("text", "value", "detected");
-            detectedText.setAttribute("visible", "true");
-          } else {
-            console.error("detectedText 요소를 찾을 수 없습니다.");
+      // API에서 데이터 가져오기
+      async function fetchData() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/coils`, {
+            method: "get",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: null,
+          });
+          if (!response.ok) {
+            throw new Error(`${response.status} ${response.statusText}`);
           }
-        });
+          const json = await response.json();
+          console.log("json1: " + JSON.stringify(json));
 
-        marker.addEventListener("markerLost", () => {
-          if (detectedText) {
-            detectedText.setAttribute("visible", "false");
+          if (json.status !== 200) {
+            throw new Error(json.message);
           }
-        });
-      };
+          console.log("json2: " + JSON.stringify(json));
+
+          const dataArray = Array.isArray(json.data) ? json.data : [json.data];
+          console.log("dataArray: " + dataArray);
+
+          if (dataArray.length === 0) {
+            return [];
+          }
+          return dataArray.map((item, index) => ({
+            ...item,
+            key: index + 1,
+          }));
+        } catch (err) {
+          console.error(err);
+          return [];
+        }
+      }
+
+      marker.addEventListener("markerFound", async () => {
+        // API에서 데이터 가져오기
+        const data = await fetchData();
+        if (data) {
+          // 큐브 위에 데이터 표시
+          apiDataText.setAttribute("text", "value", `Data: ${data.value}`); // 'value'를 실제 데이터 속성으로 변경
+          apiDataText.setAttribute("visible", "true");
+        }
+      });
+
+      marker.addEventListener("markerLost", () => {
+        apiDataText.setAttribute("visible", "false");
+      });
     </script>
   </body>
 </html>
