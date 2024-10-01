@@ -54,36 +54,76 @@
   </head>
   <body style="margin: 0; overflow: hidden">
     <a-scene embedded arjs="sourceType: webcam;">
-      <!-- 히로 마커 -->
       <a-marker preset="hiro" id="markerHiro">
         <!-- 큐브 -->
-        <a-box position="0 0.5 0" rotation="0 45 0" color="#4CC3D0"></a-box>
+        <a-box
+          position="0 0.5 0"
+          rotation="0 45 0"
+          color="#4CC3D0"
+          id="myCube"
+        ></a-box>
+        <!-- 데이터 텍스트 -->
+        <a-entity
+          id="apiDataText"
+          text="value:; color: red; width: 5"
+          position="0 1.5 0"
+          visible="false"
+        ></a-entity>
       </a-marker>
 
-      <!-- 카메라 -->
       <a-entity camera></a-entity>
-
-      <!-- "detected" 텍스트 -->
-      <a-entity
-        id="detectedText"
-        text="value:; color: red; width: 5"
-        position="0 2 -3"
-        visible="false"
-      ></a-entity>
     </a-scene>
 
     <script>
-      // 마커가 인식되면 텍스트를 보이게 하고, 마커가 사라지면 다시 숨김 처리
       const marker = document.querySelector("#markerHiro");
-      const detectedText = document.querySelector("#detectedText");
+      const apiDataText = document.querySelector("#apiDataText");
+      const API_BASE_URL = "http://52.79.188.64:8888/api/materials-action";
 
-      marker.addEventListener("markerFound", () => {
-        detectedText.setAttribute("text", "value", "detected");
-        detectedText.setAttribute("visible", "true");
+      // API에서 데이터 가져오기
+      async function fetchData() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/coils`, {
+            method: "get",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: null,
+          });
+          if (!response.ok) {
+            throw new Error(`${response.status} ${response.statusText}`);
+          }
+          const json = await response.json();
+          if (json.status !== 200) {
+            throw new Error(json.message);
+          }
+          const dataArray = Array.isArray(json.data) ? json.data : [json.data];
+
+          if (dataArray.length === 0) {
+            return [];
+          }
+          return dataArray.map((item, index) => ({
+            ...item,
+            key: index + 1,
+          }));
+        } catch (err) {
+          console.error(err);
+          return [];
+        }
+      }
+
+      marker.addEventListener("markerFound", async () => {
+        // API에서 데이터 가져오기
+        const data = await fetchData();
+        if (data) {
+          // 큐브 위에 데이터 표시
+          apiDataText.setAttribute("text", "value", `Data: ${data.value}`); // 'value'를 실제 데이터 속성으로 변경
+          apiDataText.setAttribute("visible", "true");
+        }
       });
 
       marker.addEventListener("markerLost", () => {
-        detectedText.setAttribute("visible", "false");
+        apiDataText.setAttribute("visible", "false");
       });
     </script>
   </body>
