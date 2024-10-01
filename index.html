@@ -47,33 +47,14 @@
 <!-- 위: Simple 3D 모델 렌더링 -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AR 3D Model</title>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.min.js"></script>
-
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
-      a-scene {
-        height: 100vh;
-      }
-    </style>
   </head>
-  <body>
-    <a-scene
-      embedded
-      vr-mode-ui="enabled: false"
-      arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: true;"
-    >
-      <!-- 마커 인식 -->
+  <body style="margin: 0; overflow: hidden">
+    <a-scene embedded arjs="sourceType: webcam;">
       <a-marker preset="hiro">
-        <!-- AR에서 표시할 3D 모델 -->
         <a-box
           position="0 0.5 0"
           rotation="0 45 0"
@@ -83,7 +64,6 @@
           width="1"
         ></a-box>
       </a-marker>
-      <!-- 카메라 설정 -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
