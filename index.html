@@ -49,22 +49,42 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/3.3.2/aframe/build/aframe-ar.min.js"></script>
   </head>
   <body style="margin: 0; overflow: hidden">
     <a-scene embedded arjs="sourceType: webcam;">
-      <a-marker preset="hiro">
-        <a-box
-          position="0 0.5 0"
-          rotation="0 45 0"
-          color="#4CC3D0"
-          depth="1"
-          height="1"
-          width="1"
-        ></a-box>
+      <!-- 히로 마커 -->
+      <a-marker preset="hiro" id="markerHiro">
+        <!-- 큐브 -->
+        <a-box position="0 0.5 0" rotation="0 45 0" color="#4CC3D0"></a-box>
       </a-marker>
+
+      <!-- 카메라 -->
       <a-entity camera></a-entity>
+
+      <!-- "detected" 텍스트 -->
+      <a-entity
+        id="detectedText"
+        text="value:; color: red; width: 5"
+        position="0 2 -3"
+        visible="false"
+      ></a-entity>
     </a-scene>
+
+    <script>
+      // 마커가 인식되면 텍스트를 보이게 하고, 마커가 사라지면 다시 숨김 처리
+      const marker = document.querySelector("#markerHiro");
+      const detectedText = document.querySelector("#detectedText");
+
+      marker.addEventListener("markerFound", () => {
+        detectedText.setAttribute("visible", "true");
+        detectedText.setAttribute("text", "value", "detected");
+      });
+
+      marker.addEventListener("markerLost", () => {
+        detectedText.setAttribute("visible", "false");
+      });
+    </script>
   </body>
 </html>
